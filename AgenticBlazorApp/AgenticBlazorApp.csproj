@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BbcNewsPlugin\BbcNewsPlugin.csproj" />
     <ProjectReference Include="..\BrowserPlugin\BrowserPlugin.csproj" />
+    <ProjectReference Include="..\CurrencyPlugin\CurrencyPlugin.csproj" />
     <ProjectReference Include="..\MailPlugin\MailPlugin.csproj" />
     <ProjectReference Include="..\SerpApiPlugin\SerpApiPlugin.csproj" />
   </ItemGroup>

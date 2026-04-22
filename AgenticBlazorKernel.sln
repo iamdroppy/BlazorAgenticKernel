@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailPlugin", "MailPlugin\Ma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerpApiPlugin", "SerpApiPlugin\SerpApiPlugin.csproj", "{ECCAB17E-439A-4BD6-AF7E-19ABA3FCB361}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyPlugin", "CurrencyPlugin\CurrencyPlugin.csproj", "{BF200F2B-09B0-402B-9D88-C2B62BE79096}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{ECCAB17E-439A-4BD6-AF7E-19ABA3FCB361}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECCAB17E-439A-4BD6-AF7E-19ABA3FCB361}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECCAB17E-439A-4BD6-AF7E-19ABA3FCB361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF200F2B-09B0-402B-9D88-C2B62BE79096}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF200F2B-09B0-402B-9D88-C2B62BE79096}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF200F2B-09B0-402B-9D88-C2B62BE79096}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF200F2B-09B0-402B-9D88-C2B62BE79096}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

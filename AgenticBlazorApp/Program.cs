@@ -8,6 +8,7 @@ using Hangfire.Storage.SQLite;
 using MailPlugin;
 using SerpApiPlugin;
 using Microsoft.SemanticKernel;
+using CurrencyPlugin;
 
 var builder = WebApplication.CreateBuilder(args);
 // add configuration from appsettings.json and appsettings.local.json (if it exists)
@@ -72,6 +73,7 @@ builder.Services.AddScoped<MailPlugin.MailPlugin>();
 builder.Services.AddScoped<AgenticService>();
 builder.Services.AddScoped<ScheduledAgenticJob>();
 builder.Services.AddScoped<DuckDuckGoPlugin>();
+builder.Services.AddScoped<BtcUsdPlugin>();
 // ChatService is scoped to the Blazor circuit so the ChatHistory
 // persists across turns for as long as the connection stays alive.
 builder.Services.AddScoped<ChatService>();
@@ -109,6 +111,9 @@ builder.Services.AddScoped<Kernel>(sp =>
 
     // Loads Serpi plugins
     kernel.Plugins.AddFromObject(sp.GetRequiredService<DuckDuckGoPlugin>(), "WebSearch");
+
+    // Currency Plugins
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<BtcUsdPlugin>(), "BtcUsdCurrency");
 
     return kernel;
 });
