@@ -10,7 +10,9 @@ using SerpApiPlugin;
 using Microsoft.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
-
+// add configuration from appsettings.json and appsettings.local.json (if it exists)
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: true);
 // ---------------------------------------------------------------------
 // Blazor (Server-Side Rendering with interactive server components)
 // ---------------------------------------------------------------------
@@ -80,7 +82,12 @@ builder.Services.AddScoped<ChatService>();
 builder.Services.AddScoped<Kernel>(sp =>
 {
     var cfg = sp.GetRequiredService<IConfiguration>();
-    var apiKey = "sk-123";
+    var apiKey = cfg["OpenAI:ApiKey"];
+    if (string.IsNullOrEmpty(apiKey))
+    {
+        throw new InvalidOperationException(
+            "OpenAI API key is not configured. Please set OpenAI:ApiKey in appsettings or user secrets.");
+    }
     var model = cfg["OpenAI:ChatModel"] ?? "gpt-4o-mini";
 
     var kernelBuilder = Kernel.CreateBuilder();
