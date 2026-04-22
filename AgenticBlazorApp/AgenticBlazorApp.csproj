@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <UserSecretsId>agentic-blazor-kernel-demo</UserSecretsId>
+    <RootNamespace>AgenticBlazorApp</RootNamespace>
+    <AssemblyName>AgenticBlazorApp</AssemblyName>
+    <!-- SK ships some experimental APIs; silence the SKEXPxxxx warnings we intentionally use. -->
+    <NoWarn>$(NoWarn);SKEXP0001;SKEXP0010;SKEXP0070</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.30.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.30.0" />
+
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
+    <PackageReference Include="Hangfire.Storage.SQLite" Version="0.4.2" />
+
+    <!-- Markdown rendering inside chat bubbles. -->
+    <PackageReference Include="Markdig" Version="0.38.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BbcNewsPlugin\BbcNewsPlugin.csproj" />
+    <ProjectReference Include="..\BrowserPlugin\BrowserPlugin.csproj" />
+    <ProjectReference Include="..\MailPlugin\MailPlugin.csproj" />
+    <ProjectReference Include="..\SerpApiPlugin\SerpApiPlugin.csproj" />
+  </ItemGroup>
+
+</Project>

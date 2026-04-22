@@ -1,0 +1,133 @@
+using AgenticBlazorApp.Components;
+using AgenticBlazorApp.Plugins;
+using AgenticBlazorApp.Services;
+using BbcNewsPlugin;
+using BrowserPlugin;
+using Hangfire;
+using Hangfire.Storage.SQLite;
+using MailPlugin;
+using SerpApiPlugin;
+using Microsoft.SemanticKernel;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// ---------------------------------------------------------------------
+// Blazor (Server-Side Rendering with interactive server components)
+// ---------------------------------------------------------------------
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+// ---------------------------------------------------------------------
+// Hangfire  (SQLite storage)
+// ---------------------------------------------------------------------
+var sqliteConn = builder.Configuration["Hangfire:SQLiteConnectionString"]
+                 ?? "hangfire.db";
+
+builder.Services.AddHangfire(cfg => cfg
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSQLiteStorage(sqliteConn));
+
+builder.Services.AddHangfireServer();
+
+// ---------------------------------------------------------------------
+// HttpClient for the plugins (so they respect IHttpClientFactory + timeouts)
+// ---------------------------------------------------------------------
+builder.Services.AddHttpClient<NewsPlugin>(c =>
+{
+    c.Timeout = TimeSpan.FromSeconds(15);
+    c.DefaultRequestHeaders.UserAgent.ParseAdd("AgenticBlazorKernel/1.0");
+});
+
+builder.Services.AddHttpClient<BrowserReader>(c =>
+{
+    c.Timeout = TimeSpan.FromSeconds(20);
+    c.DefaultRequestHeaders.UserAgent.ParseAdd(
+        "Mozilla/5.0 (compatible; AgenticBlazorKernel/1.0)");
+});
+
+// ---------------------------------------------------------------------
+// Mail — bind Mail:Accounts from config and register the singleton registry.
+// Supports N accounts, each with its own IMAP + SMTP settings.
+// ---------------------------------------------------------------------
+var mailAccounts = builder.Configuration
+    .GetSection("Mail:Accounts")
+    .Get<List<MailAccountOptions>>() ?? new List<MailAccountOptions>();
+
+builder.Services.AddSingleton(new MailAccountRegistry(mailAccounts));
+
+// ---------------------------------------------------------------------
+// App services
+// ---------------------------------------------------------------------
+// AlertService is a singleton pub/sub bus so every Blazor circuit
+// and every Hangfire job sees the same notification stream.
+builder.Services.AddSingleton<AlertService>();
+
+// Scoped — a fresh Kernel + plugin instances per request / per Hangfire job.
+builder.Services.AddScoped<SchedulerPlugin>();
+builder.Services.AddScoped<MailPlugin.MailPlugin>();
+builder.Services.AddScoped<AgenticService>();
+builder.Services.AddScoped<ScheduledAgenticJob>();
+builder.Services.AddScoped<DuckDuckGoPlugin>();
+// ChatService is scoped to the Blazor circuit so the ChatHistory
+// persists across turns for as long as the connection stays alive.
+builder.Services.AddScoped<ChatService>();
+
+// ---------------------------------------------------------------------
+// Semantic Kernel
+// ---------------------------------------------------------------------
+builder.Services.AddScoped<Kernel>(sp =>
+{
+    var cfg = sp.GetRequiredService<IConfiguration>();
+    var apiKey = "sk-123";
+    var model = cfg["OpenAI:ChatModel"] ?? "gpt-4o-mini";
+
+    var kernelBuilder = Kernel.CreateBuilder();
+    kernelBuilder.AddOpenAIChatCompletion(model, apiKey);
+
+    var kernel = kernelBuilder.Build();
+
+    // Load the external plugin DLL (BbcNewsPlugin assembly).
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<NewsPlugin>(), "News");
+
+    // Load the external plugin DLL (BrowserPlugin assembly).
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<BrowserReader>(), "Browser");
+
+    // Load the external plugin DLL (MailPlugin assembly).
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<MailPlugin.MailPlugin>(), "Mail");
+
+    // In-process Scheduler plugin that calls Hangfire.
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<SchedulerPlugin>(), "Scheduler");
+
+    // Loads Serpi plugins
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<DuckDuckGoPlugin>(), "WebSearch");
+
+    return kernel;
+});
+
+// ---------------------------------------------------------------------
+// Pipeline
+// ---------------------------------------------------------------------
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseAntiforgery();
+
+// Hangfire admin dashboard (only enabled in dev for safety).
+if (app.Environment.IsDevelopment())
+{
+    app.UseHangfireDashboard("/hangfire");
+}
+
+app.MapRazorComponents<App>()
+   .AddInteractiveServerRenderMode();
+
+app.Run();

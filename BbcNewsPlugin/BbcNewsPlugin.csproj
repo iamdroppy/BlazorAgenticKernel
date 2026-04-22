@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <AssemblyName>BbcNewsPlugin</AssemblyName>
+    <RootNamespace>BbcNewsPlugin</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      We only need the abstractions (KernelFunctionAttribute). The host app
+      pulls in the full Microsoft.SemanticKernel package and loads this DLL
+      as a plugin via Kernel.Plugins.AddFromObject(...).
+    -->
+    <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.30.0" />
+  </ItemGroup>
+
+</Project>
