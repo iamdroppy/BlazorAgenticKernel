@@ -314,7 +314,7 @@ a:hover { color: var(--accent-hot); text-decoration: underline; }
 
 .msg.user .bubble {
     background: var(--bg-elev-2);
-    border-color: var(--line-strong);
+    border-color: #ef3d3d;
 }
 
 .msg.assistant .bubble {

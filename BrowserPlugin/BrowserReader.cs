@@ -35,7 +35,7 @@ public sealed class BrowserReader
         }
     }
 
-    [KernelFunction("ReadUrl")]
+    //[KernelFunction("ReadUrl")]
     [Description(
         "Fetch a web page by URL and return its main text content (title + body, " +
         "HTML stripped).  Use this when the user asks you to 'read', 'summarise', " +

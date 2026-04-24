@@ -112,7 +112,7 @@ public sealed class ChatService : IDisposable
         var settings = new OpenAIPromptExecutionSettings
         {
             ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
-            Temperature = 0.3
+            Temperature = 1
         };
 
         try

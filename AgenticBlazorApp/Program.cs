@@ -9,6 +9,8 @@ using MailPlugin;
 using SerpApiPlugin;
 using Microsoft.SemanticKernel;
 using CurrencyPlugin;
+using CepPlugin;
+using FileSystemPlugin;
 
 var builder = WebApplication.CreateBuilder(args);
 // add configuration from appsettings.json and appsettings.local.json (if it exists)
@@ -73,10 +75,17 @@ builder.Services.AddScoped<MailPlugin.MailPlugin>();
 builder.Services.AddScoped<AgenticService>();
 builder.Services.AddScoped<ScheduledAgenticJob>();
 builder.Services.AddScoped<DuckDuckGoPlugin>();
-builder.Services.AddScoped<BtcUsdPlugin>();
+builder.Services.AddScoped<LiveCurrency>();
+builder.Services.AddScoped<CepPlugin.CepPlugin>();
+builder.Services.AddScoped<ProcPlugin>();
 // ChatService is scoped to the Blazor circuit so the ChatHistory
 // persists across turns for as long as the connection stays alive.
 builder.Services.AddScoped<ChatService>();
+
+// Telegram agent — long-polls Telegram and runs every incoming message
+// through the same Kernel (with auto tool calling) that powers the
+// Blazor chat.  Stays idle if Telegram:BotToken is not configured.
+builder.Services.AddHostedService<TelegramAgentService>();
 
 // ---------------------------------------------------------------------
 // Semantic Kernel
@@ -101,7 +110,7 @@ builder.Services.AddScoped<Kernel>(sp =>
     kernel.Plugins.AddFromObject(sp.GetRequiredService<NewsPlugin>(), "News");
 
     // Load the external plugin DLL (BrowserPlugin assembly).
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<BrowserReader>(), "Browser");
+    //kernel.Plugins.AddFromObject(sp.GetRequiredService<BrowserReader>(), "Browser");
 
     // Load the external plugin DLL (MailPlugin assembly).
     kernel.Plugins.AddFromObject(sp.GetRequiredService<MailPlugin.MailPlugin>(), "Mail");
@@ -113,7 +122,13 @@ builder.Services.AddScoped<Kernel>(sp =>
     kernel.Plugins.AddFromObject(sp.GetRequiredService<DuckDuckGoPlugin>(), "WebSearch");
 
     // Currency Plugins
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<BtcUsdPlugin>(), "BtcUsdCurrency");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<LiveCurrency>(), "BtcUsdCurrency");
+    
+    // CEP Plugins
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<CepPlugin.CepPlugin>(), "CepPlugin");
+
+    // FileSystem Plugins
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<ProcPlugin>(), "ProcPlugin");
 
     return kernel;
 });

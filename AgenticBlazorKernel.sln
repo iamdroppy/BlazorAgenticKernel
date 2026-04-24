@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.4.11506.43 insiders
+VisualStudioVersion = 18.4.11506.43
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgenticBlazorApp", "AgenticBlazorApp\AgenticBlazorApp.csproj", "{11111111-1111-1111-1111-111111111111}"
 EndProject
@@ -13,6 +13,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerpApiPlugin", "SerpApiPlugin\SerpApiPlugin.csproj", "{ECCAB17E-439A-4BD6-AF7E-19ABA3FCB361}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyPlugin", "CurrencyPlugin\CurrencyPlugin.csproj", "{BF200F2B-09B0-402B-9D88-C2B62BE79096}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CepPlugin", "CepPlugin\CepPlugin.csproj", "{3839FDE1-9724-40F6-9603-9ED82DCCFC4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystemPlugin", "FileSystemPlugin\FileSystemPlugin.csproj", "{1E0B37C5-8676-49C8-ABA0-3E4BB2C2699D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,6 +48,14 @@ Global
 		{BF200F2B-09B0-402B-9D88-C2B62BE79096}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF200F2B-09B0-402B-9D88-C2B62BE79096}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF200F2B-09B0-402B-9D88-C2B62BE79096}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3839FDE1-9724-40F6-9603-9ED82DCCFC4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3839FDE1-9724-40F6-9603-9ED82DCCFC4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3839FDE1-9724-40F6-9603-9ED82DCCFC4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3839FDE1-9724-40F6-9603-9ED82DCCFC4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E0B37C5-8676-49C8-ABA0-3E4BB2C2699D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E0B37C5-8676-49C8-ABA0-3E4BB2C2699D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E0B37C5-8676-49C8-ABA0-3E4BB2C2699D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E0B37C5-8676-49C8-ABA0-3E4BB2C2699D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

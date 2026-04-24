@@ -58,7 +58,7 @@ public sealed class ScheduledAgenticJob
         var settings = new OpenAIPromptExecutionSettings
         {
             ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
-            Temperature = 0.2
+            Temperature = 1
         };
 
         string body;
