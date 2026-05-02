@@ -70,6 +70,7 @@ builder.Services.AddSingleton(new MailAccountRegistry(mailAccounts));
 builder.Services.AddSingleton<AlertService>();
 
 // Scoped — a fresh Kernel + plugin instances per request / per Hangfire job.
+
 builder.Services.AddScoped<SchedulerPlugin>();
 builder.Services.AddScoped<MailPlugin.MailPlugin>();
 builder.Services.AddScoped<AgenticService>();
@@ -78,6 +79,7 @@ builder.Services.AddScoped<DuckDuckGoPlugin>();
 builder.Services.AddScoped<LiveCurrency>();
 builder.Services.AddScoped<CepPlugin.CepPlugin>();
 builder.Services.AddScoped<ProcPlugin>();
+builder.Services.AddScoped<FsPLugin>();
 // ChatService is scoped to the Blazor circuit so the ChatHistory
 // persists across turns for as long as the connection stays alive.
 builder.Services.AddScoped<ChatService>();
@@ -107,28 +109,29 @@ builder.Services.AddScoped<Kernel>(sp =>
     var kernel = kernelBuilder.Build();
 
     // Load the external plugin DLL (BbcNewsPlugin assembly).
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<NewsPlugin>(), "News");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<NewsPlugin>(), nameof(NewsPlugin));
 
     // Load the external plugin DLL (BrowserPlugin assembly).
-    //kernel.Plugins.AddFromObject(sp.GetRequiredService<BrowserReader>(), "Browser");
+    //kernel.Plugins.AddFromObject(sp.GetRequiredService<BrowserReader>(), nameof(BrowserReader));
 
     // Load the external plugin DLL (MailPlugin assembly).
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<MailPlugin.MailPlugin>(), "Mail");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<MailPlugin.MailPlugin>(), nameof(MailPlugin.MailPlugin));
 
     // In-process Scheduler plugin that calls Hangfire.
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<SchedulerPlugin>(), "Scheduler");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<SchedulerPlugin>(), nameof(SchedulerPlugin));
 
     // Loads Serpi plugins
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<DuckDuckGoPlugin>(), "WebSearch");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<DuckDuckGoPlugin>(), nameof(DuckDuckGoPlugin));
 
     // Currency Plugins
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<LiveCurrency>(), "BtcUsdCurrency");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<LiveCurrency>(), nameof(LiveCurrency));
     
     // CEP Plugins
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<CepPlugin.CepPlugin>(), "CepPlugin");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<CepPlugin.CepPlugin>(), nameof(CepPlugin.CepPlugin));
 
     // FileSystem Plugins
-    kernel.Plugins.AddFromObject(sp.GetRequiredService<ProcPlugin>(), "ProcPlugin");
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<FsPLugin>(), nameof(FsPLugin));
+    kernel.Plugins.AddFromObject(sp.GetRequiredService<ProcPlugin>(), nameof(ProcPlugin));
 
     return kernel;
 });
